@@ -1,0 +1,2 @@
+script is for backup the mongodb to our s3 
+it uses the corn tab timings to run the script for every sunday 2am 
