@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+import subprocess
+import datetime
+
+# MongoDB credentials and backup settings
+MONGODB_HOST = "<your-mongodb-host>"
+MONGODB_PORT = "<your-mongodb-port>"
+MONGODB_USERNAME = "<your-mongodb-username>"
+MONGODB_PASSWORD = "<your-mongodb-password>"
+MONGODB_DATABASE = "<your-mongodb-database>"
+BACKUP_DIR = "/path/to/backup"
+
+# AWS S3 settings
+S3_BUCKET = "your-s3-bucket"
+
+def main():
+    # Generate timestamp for backup directory
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_path = f"{BACKUP_DIR}/backup/{timestamp}"
+
+    # Perform MongoDB backup
+    mongodb_dump_cmd = [
+        "mongodump",
+        "--host", MONGODB_HOST,
+        "--port", MONGODB_PORT,
+        "--username", MONGODB_USERNAME,
+        "--password", MONGODB_PASSWORD,
+        "--db", MONGODB_DATABASE,
+        "--out", backup_path
+    ]
+    subprocess.run(mongodb_dump_cmd, check=True)
+
+    # Upload backup to S3
+    aws_s3_cmd = [
+        "aws", "s3", "cp",
+        backup_path, f"s3://{S3_BUCKET}/{backup_path}/",
+        "--recursive"
+    ]
+    subprocess.run(aws_s3_cmd, check=True)
+
+if __name__ == "__main__":
+    main()
