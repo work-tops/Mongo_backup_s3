@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# MongoDB credentials and backup settings
+MONGODB_HOST="<your-mongodb-host>"
+MONGODB_PORT="<your-mongodb-port>"
+MONGODB_USERNAME="<your-mongodb-username>"
+MONGODB_PASSWORD="<your-mongodb-password>"
+MONGODB_DATABASE="<your-mongodb-database>"
+BACKUP_DIR="/path/to/backup"
+
+# AWS S3 settings
+S3_BUCKET="your-s3-bucket"
+
+# Perform MongoDB backup
+mongodump --host $MONGODB_HOST --port $MONGODB_PORT --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --db $MONGODB_DATABASE --out $BACKUP_DIR
+
+# Upload backup to S3
+aws s3 cp $BACKUP_DIR s3://$S3_BUCKET/backup/$(date +"%Y-%m-%d_%H-%M-%S")/ --recursive

@@ -1,0 +1,6 @@
+0 2 * * 0 /path/to/backup-script.sh
+#0 represents the minute field (0 minutes past the hour).
+#2 represents the hour field (2 AM).
+#* for the day of the month field (every day).
+#* for the month field (every month).
+#0 for the day of the week field (Sunday).
